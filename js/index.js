@@ -1,7 +1,7 @@
 new Vue({
 	el: ".todoapp",
 	data: {
-		msg: "请输入你的任务清单",
+		msg: "",
 		inpval: '',
     count: 1,
     noDoneNum: '',
@@ -19,6 +19,10 @@ new Vue({
 	},
 	methods: {
 		addTask() {
+      let value = this.inpval && this.inpval.trim()
+      if(!value){
+        return
+      }
 			this.list.push({
 				id: ++this.count,
 				task: this.inpval,
@@ -64,7 +68,12 @@ new Vue({
         }
       })
     }
-	},
+  },
+  directives:{
+    'getfocus': function(el, binding){
+      el.focus()
+    }
+  },
 	mounted() {
     this.getfilter()
     this.noDone()
