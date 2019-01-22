@@ -14,7 +14,7 @@
 		<section class="todoapp">
 			<header class="header">
 				<h1>todos</h1>
-				<input class="new-todo" :placeholder="msg" autofocus>
+				<input class="new-todo" :placeholder="msg" v-model="inpval" autofocus @keyup.enter="addTask">
 			</header>
 			<!-- This section should be hidden by default and shown when there are todos -->
 			<section class="main">
@@ -23,34 +23,34 @@
 				<ul class="todo-list">
 					<!-- These are here just to show the structure of the list items -->
 					<!-- List items should get the class `editing` when editing and `completed` when marked as completed -->
-					<li class="completed">
+					<li :class="[item.status ? 'completed' : '',item.dbclick?'editing':'']" v-for="item in activeArr"  >
 						<div class="view">
-							<input class="toggle" type="checkbox" checked>
-							<label>Taste JavaScript</label>
-							<button class="destroy"></button>
+							<input class="toggle" type="checkbox" :checked="item.status" @click="item.status = !item.status">
+							<label  @dblclick="item.dbclick = !item.dbclick">{{ item.task }}</label>
+							<button class="destroy" @click="delTask(item.id)"></button>
 						</div>
-						<input class="edit" value="Create a TodoMVC template">
+						<input class="edit" autofocus v-model="item.task" @blur.prevent="item.dbclick = !item.dbclick">
 					</li>
 				</ul>
 			</section>
 			<!-- This footer should hidden by default and shown when there are todos -->
 			<footer class="footer">
 				<!-- This should be `0 items left` by default -->
-				<span class="todo-count"><strong>0</strong> item left</span>
+				<span class="todo-count"><strong>{{ noDoneNum }}</strong> item left</span>
 				<!-- Remove this if you don't implement routing -->
 				<ul class="filters">
 					<li>
-						<a class="selected" href="#/">All</a>
+						<a class="selected" href="#/" @click.prevent="getfilter(all)"   v-text="all">All</a>
 					</li>
 					<li>
-						<a href="#/active">Active</a>
+						<a href="#" @click.prevent="getfilter(active)" v-text="active"></a>
 					</li>
 					<li>
-						<a href="#/completed">Completed</a>
+						<a href="#" @click.prevent="getfilter(completed)" v-text="completed"></a>
 					</li>
 				</ul>
 				<!-- Hidden if no completed items are left ↓ -->
-				<button class="clear-completed">Clear completed</button>
+				<button class="clear-completed" @click="clearAllcom">Clear completed</button>
 			</footer>
 		</section>
 		<footer class="info">
